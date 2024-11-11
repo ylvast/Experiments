@@ -24,12 +24,13 @@ any_tp <- function (col_number, features, kepler_feature = c("troot(x4*x4*x6)","
 }
 
 average_correlation <- function (test, features){
+  X <- test[,-1]
   all_features <- c("troot(x4*x4*x6)", features)
-  corr_df <- matrix(NA, nrow(test), length(all_features))
-  colnames(test) <- paste0("x", 1:ncol(test))
+  corr_df <- matrix(NA, nrow(X), length(all_features))
+  colnames(X) <- paste0("x", 1:ncol(X))
   colnames(corr_df) <- all_features
   for (f in seq_along(all_features)) {
-    corr_df[, f] <- eval(parse(text = all_features[f]), envir = as.data.frame(test))
+    corr_df[, f] <- eval(parse(text = all_features[f]), envir = as.data.frame(X))
   }
   corr_df <- cor(corr_df)
   return(mean(corr_df[,1][-1]))
