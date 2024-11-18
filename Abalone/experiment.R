@@ -1,5 +1,6 @@
-source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/config.R")
-source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/helpers.R")
+# Abalone
+
+source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/config.R")
 library(devtools)
 options("install.lock"=FALSE)
 devtools::install("/Users/ylvasofietollefsen/Documents/Uio/Master/GMJMCMC")
@@ -7,12 +8,24 @@ library(FBMS)
 library(randomForest)
 library(dplyr)
 
-#set.seed(2024)
+set.seed(2024)
 
+# Fix data
+# df <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/abalone.csv")
+# df["Sex_F"] <- as.numeric(df$Sex=="F")
+# df["Sex_M"] <- as.numeric(df$Sex=="M")
+# df <- df[-1]
+# df <- as.data.frame(cbind(Rings = df[,8], df[,-8]))
+# sample <- sample(c(TRUE, FALSE), nrow(df), replace=TRUE, prob=c(0.75,0.25))
+# train <- df[sample, ]
+# test  <- df[!sample, ]
+
+train <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/train.csv")
+test <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/test.csv")
+dim(df)
+# Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H:%M")
 Results <- paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_",now,".csv", sep="")
-train <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/train.csv")
-test <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/test.csv")
 
 # Simple checks
 common_rows <- inner_join(train, test, by = names(train))
@@ -24,7 +37,7 @@ if (nrow(common_rows) != 0) {
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
 # Running the experiments
-for (ex in c(1:6)){
+for (ex in c(1:12)){
   
   # To specify in model
   chains <- experiment_config$B[ifelse(ex <= 6, 1, 2)]
@@ -54,13 +67,13 @@ for (ex in c(1:6)){
     # The model
     if (chains != 1){
       time_taken <- system.time({
-        model <- fbms(formula = MajorAxis ~ ., runs = chains, cores = 1, data = train, # Change more cores
+        model <- fbms(formula = Rings ~ ., runs = chains, cores = chains, data = train, 
                       transforms = transforms, method = "gmjmcmc.parallel", probs = probs,
                       params = params, P = P, N.init = ninit, N.final = nfinal)
       })
     } else {
       time_taken <- system.time({
-        model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
+        model <- fbms(formula = Rings ~ ., data = train, transforms = transforms,
                       method = "gmjmcmc", probs = probs, params = params, P = P, 
                       N.init = ninit, N.final = nfinal)
       })
@@ -69,48 +82,32 @@ for (ex in c(1:6)){
     summary <- summary(model, tol=0.1, pop="best")
     features <- summary$feats.strings
 
-    # Count positives 
-    list_tp <- any_tp(col_number=dim(train[,2:ncol(train)])[2], features)
-    count_tp <- length(list_tp) # Number of true positives
-    F1 <- length(any_tp(col_number=dim(train[,2:ncol(train)])[2], features,kepler_feature=c("troot(x4*x4*x6)")))>0 
-    F2 <- length(any_tp(col_number=dim(train[,2:ncol(train)])[2], features,kepler_feature=c("troot(x4*x4*x9)")))>0
-    F3 <- length(any_tp(col_number=dim(train[,2:ncol(train)])[2], features,kepler_feature=c("troot(x4*x4*x9*x9)")))>0
-    F4 <- length(any_tp(col_number=dim(train[,2:ncol(train)])[2], features,kepler_feature=c("troot(x4*x4*x7)")))>0
-    fp <- length(features) - count_tp # Number of false positives
-
-    # Correlations
-    cor <- average_correlation(test,features) 
-    if (count_tp==0){
-      cor_fp <- average_correlation(test,features) # Average correlation false positives
-    } else{
-      cor_fp <- average_correlation(test,features[-list_tp]) # Average correlation false positives
-    }
-    
     # Three most important features 
     feature1 <- if (length(features) > 0) features[1] else "NA"
     feature2 <- if (length(features) > 1) features[2] else "NA"
     feature3 <- if (length(features) > 2) features[3] else "NA"
 
+    # MAE 
+    preds <- predict(model,test[,-1])$aggr$mean
+    mae <- mean(abs(preds-test$Rings))
+    
+    # RMSE
+    rmse <- sqrt(mean((preds-test$Rings)^2))
+    
+    # Correlation
+    cor <- cor(preds, test$Rings, use = "complete.obs")
+    
     # Time elapsed
     elapsed_time <- time_taken["elapsed"]
     
-    # MAE 
-    preds <- predict(model,test[,-1])$aggr$mean
-    mae <- mean(abs(preds-test$MajorAxis))
     
     # Write to csv
     current_results <- data.frame(
       Experiment = experiment_names[ex],
       Run = number,
-      F1 = F1,
-      F2 = F2,
-      F3 = F3,
-      F4 = F4,
-      Count_FP = fp,
       Correlation = cor,
-      Correlation_FP = cor_fp,
       MAE = mae,
-      Count_P = length(features),
+      RMSE = rmse,
       Time = elapsed_time,
       FirstFeature = feature1,
       SecondFeature = feature2,
@@ -132,19 +129,19 @@ predictions_rf <- predict(model_rf, newdata = test[,-1])
 # Calculate the sum of squared errors (SSE) for the Random Forest model
 mae_rf <- mean(abs(predictions_rf - test$MajorAxis))
 
+# RMSE
+rmse <- sqrt(mean((predictions_rf-test$Rings)^2))
+
+# Correlation
+cor <- cor(predictions_rf, test$Rings, use = "complete.obs")
+
 
 current_results <- data.frame(
   Experiment = "Randomforest",
-  Run = "1",
-  F1 = "NA",
-  F2 = "NA",
-  F3 = "NA",
-  F4 = "NA",
-  Count_FP = "NA",
-  Correlation = "NA",
-  Correlation_FP = "NA",
+  Run = 1,
+  Correlation = cor,
   MAE = mae_rf,
-  Count_P = "NA",
+  RMSE = rmse,
   Time = "NA",
   FirstFeature = "NA",
   SecondFeature = "NA",

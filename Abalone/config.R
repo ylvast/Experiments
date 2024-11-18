@@ -1,3 +1,5 @@
+# Abalone
+
 # experiment_config <- list(
 #   count = 3,
 #   transforms = c("sigmoid","sin_deg","exp_dbl","troot","p3","p2"),
@@ -14,17 +16,15 @@
 
 
 experiment_config <- list(
-  count = 1,
+  count = 30,
   transforms = c("sigmoid","sin","exp_dbl","troot","pm05","p3"),
   eps = 0.05,
   D = 10,
   L = 5,
   B = c(1,4),
-  P = c(200,25), # 17:29 it was c(100,25)
+  P = c(200,25), # 17:29 it was c(200,25)
   N_init = 1000,
   N_final = 3000,
   Q = c(15,30),
   probs = list(c(0.22,0.22,0.06,0.06,0.22,0.22),c(0.3,0.3,0.1,0.1,0.1,0.1),c(0.4,0.4,0.1,0.1,0,0))
 )
-
-

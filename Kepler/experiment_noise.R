@@ -1,24 +1,24 @@
 source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/config.R")
 source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/helpers.R")
+source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/metrics.R")
 library(devtools)
 options("install.lock"=FALSE)
 devtools::install("/Users/ylvasofietollefsen/Documents/Uio/Master/GMJMCMC")
 library(FBMS)
+# Simple checking
 library(randomForest)
-library(dplyr)
 
-#set.seed(2024)
+set.seed(2024)
+
 
 now <-format(Sys.time(), "%Y-%m-%d_%H:%M")
-Results <- paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_",now,".csv", sep="")
+Results <- paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_noise",now,".csv", sep="")
 train <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/train.csv")
 test <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/test.csv")
-
-# Simple checks
-common_rows <- inner_join(train, test, by = names(train))
-if (nrow(common_rows) != 0) {
-  stop("Error: There are common rows between training and testing sets.")
-}
+noise_sd <- 0.05 * sd(train$MajorAxis)
+noise_y <- rnorm(length(train$MajorAxis), mean = 0, sd = noise_sd)
+train["MajorAxisNoisy"] <- train$MajorAxis+noise_y
+train <- as.data.frame(cbind(MajorAxisNoisy = train[,12], train[,-c(1,12)]))
 
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
@@ -54,13 +54,13 @@ for (ex in c(1:6)){
     # The model
     if (chains != 1){
       time_taken <- system.time({
-        model <- fbms(formula = MajorAxis ~ ., runs = chains, cores = 1, data = train, # Change more cores
+        model <- fbms(formula = MajorAxisNoisy ~ ., runs = chains, cores = 1, data = train, # Change more cores
                       transforms = transforms, method = "gmjmcmc.parallel", probs = probs,
                       params = params, P = P, N.init = ninit, N.final = nfinal)
       })
     } else {
       time_taken <- system.time({
-        model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
+        model <- fbms(formula = MajorAxisNoisy ~ ., data = train, transforms = transforms,
                       method = "gmjmcmc", probs = probs, params = params, P = P, 
                       N.init = ninit, N.final = nfinal)
       })
@@ -94,7 +94,7 @@ for (ex in c(1:6)){
     # Time elapsed
     elapsed_time <- time_taken["elapsed"]
     
-    # MAE 
+    # MAE
     preds <- predict(model,test[,-1])$aggr$mean
     mae <- mean(abs(preds-test$MajorAxis))
     
@@ -125,17 +125,17 @@ for (ex in c(1:6)){
 }
 
 # Random forest for comparison
-model_rf <- randomForest(MajorAxis ~ ., data = train, ntree = 100, mtry = 3, importance = TRUE)
+model_rf <- randomForest(MajorAxisNoisy ~ ., data = train, ntree = 100, mtry = 3, importance = TRUE)
 # Make predictions on the test set
 predictions_rf <- predict(model_rf, newdata = test[,-1])
 
 # Calculate the sum of squared errors (SSE) for the Random Forest model
-mae_rf <- mean(abs(predictions_rf - test$MajorAxis))
+MAE_rf <- mean(abs(predictions_rf - test$MajorAxis))
 
 
 current_results <- data.frame(
   Experiment = "Randomforest",
-  Run = "1",
+  Run = "NA",
   F1 = "NA",
   F2 = "NA",
   F3 = "NA",
@@ -143,7 +143,7 @@ current_results <- data.frame(
   Count_FP = "NA",
   Correlation = "NA",
   Correlation_FP = "NA",
-  MAE = mae_rf,
+  MAE = MAE_rf,
   Count_P = "NA",
   Time = "NA",
   FirstFeature = "NA",
