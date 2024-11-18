@@ -1,9 +1,8 @@
 # Abalone
 
-source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/config.R")
+source("./Abalone/config.R")
 library(devtools)
-options("install.lock"=FALSE)
-devtools::install("/Users/ylvasofietollefsen/Documents/Uio/Master/GMJMCMC")
+install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 library(randomForest)
 library(dplyr)
@@ -20,12 +19,12 @@ set.seed(2024)
 # train <- df[sample, ]
 # test  <- df[!sample, ]
 
-train <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/train.csv")
-test <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/test.csv")
+train <- read.csv("./Abalone/train.csv")
+test <- read.csv("./Abalone/test.csv")
 dim(df)
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H:%M")
-Results <- paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_",now,".csv", sep="")
+Results <- paste("./Kepler/","results_",now,".csv", sep="")
 
 # Simple checks
 common_rows <- inner_join(train, test, by = names(train))

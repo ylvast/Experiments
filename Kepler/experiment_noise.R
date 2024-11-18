@@ -1,9 +1,8 @@
-source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/config.R")
-source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/helpers.R")
-source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/metrics.R")
+source("./Kepler/config.R")
+source("./Kepler/helpers.R")
+source("./Kepler/metrics.R")
 library(devtools)
-options("install.lock"=FALSE)
-devtools::install("/Users/ylvasofietollefsen/Documents/Uio/Master/GMJMCMC")
+install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 # Simple checking
 library(randomForest)
@@ -12,9 +11,9 @@ set.seed(2024)
 
 
 now <-format(Sys.time(), "%Y-%m-%d_%H:%M")
-Results <- paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_noise",now,".csv", sep="")
-train <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/train.csv")
-test <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/test.csv")
+Results <- paste("./Kepler/","results_noise",now,".csv", sep="")
+train <- read.csv("./Kepler/train.csv")
+test <- read.csv("./Kepler/test.csv")
 noise_sd <- 0.05 * sd(train$MajorAxis)
 noise_y <- rnorm(length(train$MajorAxis), mean = 0, sd = noise_sd)
 train["MajorAxisNoisy"] <- train$MajorAxis+noise_y
