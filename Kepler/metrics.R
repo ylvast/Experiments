@@ -1,16 +1,21 @@
 
-date <- "2024-11-13_17:29"
-results <- read.csv(paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_",date,".csv", sep=""))
-results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/30_Single_200_pop.csv")
+date <- "2024-11-19_09_41"
+#results <- read.csv(paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_",date,".csv", sep=""))
+results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/30_Single_200_pop_noise.csv")
+#results <- read.csv(paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_noise",date,".csv", sep=""))
+results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/30_parallel_50_pop.csv")
+
+
 
 #colnames <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 colnames <- c("S1","S2","S3","S4","S5","S6")
+colnames <- c("P1","P2","P3","P4","P5","P6")
 rownames <- c("Pow","F1","F2","F3","F4","Count_P","Count_FP","FDR","Correlation_P","Correlation_FP","MAE","Time")
 Metrics <- data.frame(matrix(ncol = length(colnames), nrow = length(rownames)))
 colnames(Metrics) <- colnames
 rownames(Metrics) <- rownames
 
-exp_df$F1
+results
 for (experiment in colnames) {
   exp_df <- results[results$Experiment==experiment,]
   exp_df <- exp_df[rowSums(is.na(exp_df)) != ncol(exp_df), ]

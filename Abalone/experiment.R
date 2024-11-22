@@ -21,10 +21,9 @@ set.seed(2024)
 
 train <- read.csv("./Abalone/train.csv")
 test <- read.csv("./Abalone/test.csv")
-dim(df)
 # Result csv
-now <-format(Sys.time(), "%Y-%m-%d_%H:%M")
-Results <- paste("./Kepler/","results_",now,".csv", sep="")
+now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
+Results <- paste("./Abalone/","results_",now,".csv", sep="")
 
 # Simple checks
 common_rows <- inner_join(train, test, by = names(train))
@@ -36,7 +35,7 @@ if (nrow(common_rows) != 0) {
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
 # Running the experiments
-for (ex in c(1:12)){
+for (ex in c(1:6)){
   
   # To specify in model
   chains <- experiment_config$B[ifelse(ex <= 6, 1, 2)]
@@ -94,7 +93,7 @@ for (ex in c(1:12)){
     rmse <- sqrt(mean((preds-test$Rings)^2))
     
     # Correlation
-    cor <- cor(preds, test$Rings, use = "complete.obs")
+    cor <- cor(preds, test$Rings, method = "pearson", use = "complete.obs")
     
     # Time elapsed
     elapsed_time <- time_taken["elapsed"]
@@ -121,18 +120,18 @@ for (ex in c(1:12)){
 }
 
 # Random forest for comparison
-model_rf <- randomForest(MajorAxis ~ ., data = train, ntree = 100, mtry = 3, importance = TRUE)
+model_rf <- randomForest(Rings ~ ., data = train, ntree = 100, mtry = 3, importance = TRUE)
 # Make predictions on the test set
 predictions_rf <- predict(model_rf, newdata = test[,-1])
 
 # Calculate the sum of squared errors (SSE) for the Random Forest model
-mae_rf <- mean(abs(predictions_rf - test$MajorAxis))
+mae_rf <- mean(abs(predictions_rf - test$Rings))
 
 # RMSE
 rmse <- sqrt(mean((predictions_rf-test$Rings)^2))
 
 # Correlation
-cor <- cor(predictions_rf, test$Rings, use = "complete.obs")
+cor <- cor(predictions_rf, test$Rings, method = "pearson", use = "complete.obs")
 
 
 current_results <- data.frame(

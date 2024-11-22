@@ -1,29 +1,24 @@
 source("./Kepler/config.R")
 source("./Kepler/helpers.R")
-source("./Kepler/metrics.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 # Simple checking
 library(randomForest)
 
-set.seed(2024)
+#set.seed(2024)
 
 
-now <-format(Sys.time(), "%Y-%m-%d_%H:%M")
+now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
 Results <- paste("./Kepler/","results_noise",now,".csv", sep="")
-train <- read.csv("./Kepler/train.csv")
+train <- read.csv("./Kepler/train_noisy.csv")
 test <- read.csv("./Kepler/test.csv")
-noise_sd <- 0.05 * sd(train$MajorAxis)
-noise_y <- rnorm(length(train$MajorAxis), mean = 0, sd = noise_sd)
-train["MajorAxisNoisy"] <- train$MajorAxis+noise_y
-train <- as.data.frame(cbind(MajorAxisNoisy = train[,12], train[,-c(1,12)]))
 
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
 # Running the experiments
-for (ex in c(1:6)){
+for (ex in c(5)){
   
   # To specify in model
   chains <- experiment_config$B[ifelse(ex <= 6, 1, 2)]

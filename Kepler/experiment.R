@@ -8,7 +8,7 @@ library(dplyr)
 
 #set.seed(2024)
 
-now <-format(Sys.time(), "%Y-%m-%d_%H:%M")
+now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
 Results <- paste("./Kepler/","results_",now,".csv", sep="")
 train <- read.csv("./Kepler/train.csv")
 test <- read.csv("./Kepler/test.csv")
