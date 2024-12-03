@@ -3,7 +3,7 @@ date <- "2024-11-19_09_41"
 #results <- read.csv(paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_",date,".csv", sep=""))
 results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/30_Single_200_pop_noise.csv")
 #results <- read.csv(paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_noise",date,".csv", sep=""))
-results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/30_parallel_50_pop.csv")
+results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/30_parallel_50_pop_noise.csv")
 
 
 
@@ -15,7 +15,6 @@ Metrics <- data.frame(matrix(ncol = length(colnames), nrow = length(rownames)))
 colnames(Metrics) <- colnames
 rownames(Metrics) <- rownames
 
-results
 for (experiment in colnames) {
   exp_df <- results[results$Experiment==experiment,]
   exp_df <- exp_df[rowSums(is.na(exp_df)) != ncol(exp_df), ]

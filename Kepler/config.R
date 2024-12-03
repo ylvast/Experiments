@@ -14,13 +14,13 @@
 
 
 experiment_config <- list(
-  count = 1,
+  count = 2,
   transforms = c("sigmoid","sin","exp_dbl","troot","pm05","p3"),
   eps = 0.05,
   D = 10,
   L = 5,
   B = c(1,4),
-  P = c(200,25), # 17:29 it was c(100,25)
+  P = c(200,25),
   N_init = 1000,
   N_final = 3000,
   Q = c(15,30),
