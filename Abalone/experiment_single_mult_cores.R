@@ -83,7 +83,7 @@ experiment_func <- function(chains,P,ninit,nfinal,params,probs,transforms,ex,see
   }
 }
 
-for (ex in c(1:2)) {
+for (ex in c(1:6)) {
   # To specify in model
   chains <- experiment_config$B[ifelse(ex <= 6, 1, 2)]
   P <- experiment_config$P[ifelse(ex <= 6, 1, 2)]
@@ -105,5 +105,5 @@ for (ex in c(1:2)) {
   params$feat$D <- experiment_config$D
   params$feat$L <- experiment_config$L
   params$feat$esp <- experiment_config$eps
-  mclapply(seq_len(experiment_config$count), function (i) experiment_func(chains,P,ninit,nfinal,params,probs,transforms,ex,i), mc.cores=2)
+  mclapply(seq_len(experiment_config$count), function (i) experiment_func(chains,P,ninit,nfinal,params,probs,transforms,ex,i), mc.cores=30)
 }
