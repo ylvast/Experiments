@@ -21,7 +21,7 @@ experiment_config <- list(
   D = 10,
   L = 5,
   B = c(1,4),
-  P = c(200,50), 
+  P = c(200,25), 
   N_init = 1000,
   N_final = 3000,
   Q = c(14,27),
