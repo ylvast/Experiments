@@ -1,6 +1,6 @@
 # Housing
 
-results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Housing/results_2025-01-18_11_42.csv")
+results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Housing/housing_parallel_50_pop_30_runs.csv")
 
 colnames <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 rownames <- c("Correlation","MAE","RMSE","Time")
