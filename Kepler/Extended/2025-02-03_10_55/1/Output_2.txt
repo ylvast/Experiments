@@ -1,0 +1,341 @@
+Data coerced to matrix type.
+Intercept added to data.
+Population 1 begin. |=                                       | |==                                      | |===                                     | |====                                    | |=====                                   | |======                                  | |=======                                 | |========                                | |=========                               |New best population crit: -132.011832630199 
+ |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     | |====================                    | |=====================                   | |======================                  | |=======================                 | |========================                | |=========================               | |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       | |==================================      | |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|New best population crit: -126.941882659667 
+ |========================================| |========================================|
+Population 1 done.
+Current best crit: -126.941882659667 
+Feature importance:
+            !                 | TypeFlag 
+############!#################| PlanetaryMassJpt 
+############!#################| RadiusJpt 
+############!#################| PeriodDays 
+            !                 | Eccentricity 
+############!#################| HostStarMassSlrMass 
+            !                 | HostStarRadiusSlrRad 
+############!#################| HostStarMetallicity 
+            !                 | HostStarTempK 
+############!#################| PlanetaryDensJpt 
+Replaced feature TypeFlag with PeriodDays*HostStarTempK 
+Replaced feature HostStarTempK with p3(PlanetaryDensJpt) 
+Added feature sin(PeriodDays) 
+Added feature exp_dbl(HostStarMassSlrMass) 
+Added feature RadiusJpt*RadiusJpt 
+Added feature RadiusJpt*PlanetaryDensJpt 
+Added feature HostStarMetallicity*HostStarMetallicity 
+Population 2 begin. |=                                       | |==                                      |New best population crit: -143.248827979041 
+ |===                                     | |====                                    | |=====                                   | |======                                  | |=======                                 | |========                                | |=========                               |New best population crit: -134.725663827624 
+ |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     | |====================                    | |=====================                   | |======================                  | |=======================                 | |========================                | |=========================               | |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       | |==================================      |New best population crit: -124.964422624669 
+ |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================|New best population crit: -121.986315976359 
+ |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|
+Population 2 done.
+Current best crit: -121.986315976359 
+Feature importance:
+ ###########!#################| PeriodDays*HostStarTempK 
+            !                 | PlanetaryMassJpt 
+            !                 | RadiusJpt 
+############!#################| PeriodDays 
+            !                 | Eccentricity 
+############!#################| HostStarMassSlrMass 
+            !                #| HostStarRadiusSlrRad 
+############!#################| HostStarMetallicity 
+            !                 | p3(PlanetaryDensJpt) 
+            !                 | PlanetaryDensJpt 
+            !                 | sin(PeriodDays) 
+            !                 | exp_dbl(HostStarMassSlrMass) 
+            !                 | RadiusJpt*RadiusJpt 
+            !                 | RadiusJpt*PlanetaryDensJpt 
+ ###########!#################| HostStarMetallicity*HostStarMetallicity 
+Replaced feature Eccentricity with HostStarMetallicity*(PeriodDays*HostStarTempK) 
+Replaced feature p3(PlanetaryDensJpt) with (PeriodDays*HostStarTempK)*TypeFlag 
+Replaced feature exp_dbl(HostStarMassSlrMass) with (HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass 
+Population 3 begin. |=                                       | |==                                      | |===                                     | |====                                    |New best population crit: -147.874978015538 
+ |=====                                   | |======                                  | |=======                                 | |========                                | |=========                               |New best population crit: -138.006934951585 
+New best population crit: -127.821799260408 
+ |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     | |====================                    |New best population crit: -119.910265824494 
+ |=====================                   | |======================                  |New best population crit: -115.587688506643 
+ |=======================                 | |========================                | |=========================               | |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       |New best population crit: -103.254829547027 
+ |==================================      | |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|
+Population 3 done.
+Current best crit: -103.254829547027 
+Feature importance:
+ ###########!#################| PeriodDays*HostStarTempK 
+            !                 | PlanetaryMassJpt 
+            !    #############| RadiusJpt 
+############!#################| PeriodDays 
+            !                 | HostStarMetallicity*(PeriodDays*HostStarTempK) 
+            !                 | HostStarMassSlrMass 
+            !                 | HostStarRadiusSlrRad 
+ ###########!#################| HostStarMetallicity 
+            !                 | (PeriodDays*HostStarTempK)*TypeFlag 
+            !                 | PlanetaryDensJpt 
+            !                 | sin(PeriodDays) 
+ ###########!#################| (HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass 
+            !                 | RadiusJpt*RadiusJpt 
+            !                 | RadiusJpt*PlanetaryDensJpt 
+ ###########!#################| HostStarMetallicity*HostStarMetallicity 
+Replaced feature PlanetaryMassJpt with p3(PeriodDays) 
+Replaced feature HostStarMetallicity*(PeriodDays*HostStarTempK) with pm05((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass) 
+Replaced feature RadiusJpt*RadiusJpt with (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+Population 4 begin. |=                                       | |==                                      | |===                                     |New best population crit: -83.6293496827254 
+ |====                                    | |=====                                   |New best population crit: -70.5961815778525 
+ |======                                  | |=======                                 | |========                                | |=========                               | |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     | |====================                    | |=====================                   | |======================                  |New best population crit: -50.8354023445794 
+ |=======================                 | |========================                | |=========================               | |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       | |==================================      | |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|
+Population 4 done.
+Current best crit: -50.8354023445794 
+Feature importance:
+            !                #| PeriodDays*HostStarTempK 
+############!#################| p3(PeriodDays) 
+            !        #########| RadiusJpt 
+ ###########!#################| PeriodDays 
+            !                 | pm05((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass) 
+            !                 | HostStarMassSlrMass 
+           #!#################| HostStarRadiusSlrRad 
+  ##########!#################| HostStarMetallicity 
+            !                 | (PeriodDays*HostStarTempK)*TypeFlag 
+  ##########!#################| PlanetaryDensJpt 
+            !                 | sin(PeriodDays) 
+            !                 | (HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass 
+            !                 | (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+            !                 | RadiusJpt*PlanetaryDensJpt 
+            !                 | HostStarMetallicity*HostStarMetallicity 
+Replaced feature PeriodDays*HostStarTempK with (HostStarMetallicity*HostStarMetallicity)*HostStarRadiusSlrRad 
+Replaced feature sin(PeriodDays) with sin(PeriodDays)*HostStarRadiusSlrRad 
+Replaced feature RadiusJpt*PlanetaryDensJpt with PeriodDays*PlanetaryDensJpt 
+Population 5 begin.New best population crit: -115.595622648182 
+ |=                                       | |==                                      | |===                                     |New best population crit: -110.694533103797 
+ |====                                    | |=====                                   |New best population crit: -91.3166375542991 
+New best population crit: -85.315193786421 
+ |======                                  | |=======                                 | |========                                | |=========                               | |==========                              | |===========                             |New best population crit: -65.0472184927697 
+ |============                            | |=============                           | |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     | |====================                    | |=====================                   | |======================                  |New best population crit: -65.0464015298828 
+ |=======================                 | |========================                | |=========================               | |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       | |==================================      | |===================================     | |====================================    |New best population crit: -64.532360660647 
+ |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|New best population crit: -49.6574119074908 
+ |========================================| |========================================| |========================================| |========================================|
+Population 5 done.
+Current best crit: -49.6574119074908 
+Feature importance:
+            !                 | (HostStarMetallicity*HostStarMetallicity)*HostStarRadiusSlrRad 
+ ###########!#################| p3(PeriodDays) 
+############!#################| RadiusJpt 
+############!#################| PeriodDays 
+            !                 | pm05((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass) 
+            !  ###############| HostStarMassSlrMass 
+            !                 | HostStarRadiusSlrRad 
+            !                 | HostStarMetallicity 
+            !                 | (PeriodDays*HostStarTempK)*TypeFlag 
+            !                 | PlanetaryDensJpt 
+            !                 | sin(PeriodDays)*HostStarRadiusSlrRad 
+            !                 | (HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass 
+            !                 | (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+############!#################| PeriodDays*PlanetaryDensJpt 
+            !                 | HostStarMetallicity*HostStarMetallicity 
+Replaced feature (HostStarMetallicity*HostStarMetallicity)*HostStarRadiusSlrRad with sigmoid(p3(PeriodDays)) 
+Replaced feature HostStarRadiusSlrRad with ((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt 
+Replaced feature HostStarMetallicity with sin(1+PeriodDays) 
+Population 6 begin. |=                                       | |==                                      | |===                                     | |====                                    | |=====                                   | |======                                  |New best population crit: -476.552181661537 
+ |=======                                 |New best population crit: -119.66125371756 
+ |========                                |New best population crit: -119.274569732305 
+ |=========                               | |==========                              | |===========                             | |============                            |New best population crit: -114.179062695211 
+ |=============                           |New best population crit: -103.960739624248 
+ |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     | |====================                    | |=====================                   |New best population crit: -90.154733174464 
+ |======================                  | |=======================                 | |========================                | |=========================               | |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        |New best population crit: -74.9096779947477 
+ |=================================       | |==================================      | |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================|New best population crit: -74.909617748066 
+ |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|New best population crit: -59.5220529290288 
+ |========================================| |========================================|
+Population 6 done.
+Current best crit: -59.5220529290288 
+Feature importance:
+            !                 | sigmoid(p3(PeriodDays)) 
+############!#################| p3(PeriodDays) 
+############!#################| RadiusJpt 
+############!#################| PeriodDays 
+            !                 | pm05((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass) 
+            !                 | HostStarMassSlrMass 
+            !                 | ((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt 
+            !                 | sin(1+PeriodDays) 
+            !                 | (PeriodDays*HostStarTempK)*TypeFlag 
+############!#################| PlanetaryDensJpt 
+            !                 | sin(PeriodDays)*HostStarRadiusSlrRad 
+            !                 | (HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass 
+            !                 | (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+############!#################| PeriodDays*PlanetaryDensJpt 
+############!#################| HostStarMetallicity*HostStarMetallicity 
+Replaced feature pm05((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass) with HostStarRadiusSlrRad 
+Replaced feature HostStarMassSlrMass with sin(Eccentricity) 
+Replaced feature sin(PeriodDays)*HostStarRadiusSlrRad with exp_dbl(PeriodDays) 
+Population 7 begin.New best population crit: -142.050122984908 
+ |=                                       | |==                                      | |===                                     |New best population crit: -61.0638011270442 
+ |====                                    | |=====                                   | |======                                  | |=======                                 | |========                                | |=========                               | |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     | |====================                    | |=====================                   | |======================                  | |=======================                 | |========================                | |=========================               | |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       | |==================================      | |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|
+Population 7 done.
+Current best crit: -61.0638011270442 
+Feature importance:
+            !                 | sigmoid(p3(PeriodDays)) 
+            !                 | p3(PeriodDays) 
+            !                 | RadiusJpt 
+############!#################| PeriodDays 
+            !                 | HostStarRadiusSlrRad 
+            !                 | sin(Eccentricity) 
+ ###########!#################| ((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt 
+            !                 | sin(1+PeriodDays) 
+            !                 | (PeriodDays*HostStarTempK)*TypeFlag 
+            !                 | PlanetaryDensJpt 
+            !                 | exp_dbl(PeriodDays) 
+            !                 | (HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass 
+            !                 | (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+############!#################| PeriodDays*PlanetaryDensJpt 
+            !                 | HostStarMetallicity*HostStarMetallicity 
+Replaced feature sin(1+PeriodDays) with (((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt)*HostStarTempK 
+Replaced feature exp_dbl(PeriodDays) with sigmoid(HostStarMetallicity) 
+Replaced feature (HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass with troot(1+PeriodDays) 
+Population 8 begin.New best population crit: -112.328208883884 
+ |=                                       | |==                                      | |===                                     |New best population crit: -88.5426942589359 
+ |====                                    |New best population crit: -83.958767727974 
+ |=====                                   | |======                                  |New best population crit: -80.9842897010342 
+ |=======                                 | |========                                | |=========                               | |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         |New best population crit: -75.8543909861111 
+ |================                        | |=================                       | |==================                      | |===================                     | |====================                    | |=====================                   |New best population crit: -60.5994666153007 
+ |======================                  | |=======================                 | |========================                | |=========================               |New best population crit: -46.380616290481 
+ |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       | |==================================      | |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|
+Population 8 done.
+Current best crit: -46.380616290481 
+Feature importance:
+            !                 | sigmoid(p3(PeriodDays)) 
+ ###########!#################| p3(PeriodDays) 
+            !                 | RadiusJpt 
+############!#################| PeriodDays 
+            !                 | HostStarRadiusSlrRad 
+            !                 | sin(Eccentricity) 
+            !                 | ((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt 
+            !                 | (((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt)*HostStarTempK 
+            !                 | (PeriodDays*HostStarTempK)*TypeFlag 
+            !                 | PlanetaryDensJpt 
+            !                 | sigmoid(HostStarMetallicity) 
+            !                 | troot(1+PeriodDays) 
+            !                 | (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+            !                 | PeriodDays*PlanetaryDensJpt 
+            !                 | HostStarMetallicity*HostStarMetallicity 
+Replaced feature sigmoid(p3(PeriodDays)) with PeriodDays*PeriodDays 
+Replaced feature HostStarRadiusSlrRad with PlanetaryDensJpt*p3(PeriodDays) 
+Replaced feature (((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt)*HostStarTempK with PlanetaryMassJpt 
+Population 9 begin. |=                                       |New best population crit: -80.8722156944254 
+ |==                                      | |===                                     | |====                                    | |=====                                   | |======                                  | |=======                                 | |========                                | |=========                               | |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     | |====================                    |New best population crit: -73.2611555519576 
+ |=====================                   | |======================                  | |=======================                 |New best population crit: -53.6006070163254 
+ |========================                |New best population crit: -39.502792330429 
+ |=========================               | |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       | |==================================      | |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|New best population crit: -39.4519332044485 
+ |========================================| |========================================|
+Population 9 done.
+Current best crit: -39.4519332044485 
+Feature importance:
+ ###########!#################| PeriodDays*PeriodDays 
+            !                 | p3(PeriodDays) 
+            !          #######| RadiusJpt 
+############!#################| PeriodDays 
+ ###########!#################| PlanetaryDensJpt*p3(PeriodDays) 
+            !                 | sin(Eccentricity) 
+            !                 | ((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt 
+            !  ###############| PlanetaryMassJpt 
+            !                 | (PeriodDays*HostStarTempK)*TypeFlag 
+            !          #######| PlanetaryDensJpt 
+            !                 | sigmoid(HostStarMetallicity) 
+            !                 | troot(1+PeriodDays) 
+            !                 | (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+            !                 | PeriodDays*PlanetaryDensJpt 
+            !                 | HostStarMetallicity*HostStarMetallicity 
+Replaced feature ((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt with exp_dbl(1+(PlanetaryDensJpt+((((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt)+(PlanetaryDensJpt*p3(PeriodDays))))) 
+Replaced feature (PeriodDays*HostStarTempK)*TypeFlag with PlanetaryMassJpt*RadiusJpt 
+Replaced feature HostStarMetallicity*HostStarMetallicity with p3(sin(Eccentricity)) 
+Population 10 begin. |=                                       | |==                                      | |===                                     | |====                                    | |=====                                   | |======                                  | |=======                                 |New best population crit: -44.8025383075049 
+ |========                                | |=========                               | |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     | |====================                    | |=====================                   | |======================                  | |=======================                 | |========================                | |=========================               | |==========================              |New best population crit: -39.6729039078983 
+ |===========================             |New best population crit: -39.4519332044485 
+ |============================            |New best population crit: -39.4499740660538 
+ |=============================           | |==============================          | |===============================         | |================================        |New best population crit: -37.9989506617845 
+ |=================================       | |==================================      | |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|
+Population 10 done.
+Current best crit: -37.9989506617845 
+Feature importance:
+            !             ####| PeriodDays*PeriodDays 
+     #######!#################| p3(PeriodDays) 
+            !#################| RadiusJpt 
+############!#################| PeriodDays 
+############!#################| PlanetaryDensJpt*p3(PeriodDays) 
+            !                 | sin(Eccentricity) 
+            !                 | exp_dbl(1+(PlanetaryDensJpt+((((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt)+(PlanetaryDensJpt*p3(PeriodDays))))) 
+            !#################| PlanetaryMassJpt 
+            !                 | PlanetaryMassJpt*RadiusJpt 
+   #########!#################| PlanetaryDensJpt 
+            !                 | sigmoid(HostStarMetallicity) 
+            !                 | troot(1+PeriodDays) 
+            !                 | (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+            !                #| PeriodDays*PlanetaryDensJpt 
+            !                 | p3(sin(Eccentricity)) 
+Replaced feature PlanetaryMassJpt*RadiusJpt with sigmoid(1+PeriodDays) 
+Replaced feature troot(1+PeriodDays) with exp_dbl(sigmoid(1+PeriodDays)) 
+Replaced feature PeriodDays*PlanetaryDensJpt with TypeFlag 
+Population 11 begin. |=                                       | |==                                      |New best population crit: -1897.52141686219 
+ |===                                     | |====                                    |New best population crit: -294.967800631157 
+ |=====                                   | |======                                  | |=======                                 |New best population crit: -39.502792330429 
+ |========                                | |=========                               | |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         | |================                        | |=================                       | |==================                      | |===================                     |New best population crit: -39.502792330429 
+ |====================                    | |=====================                   | |======================                  | |=======================                 | |========================                | |=========================               | |==========================              | |===========================             | |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       | |==================================      | |===================================     |New best population crit: -37.9969458572049 
+ |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|
+Population 11 done.
+Current best crit: -37.9969458572049 
+Feature importance:
+            !                #| PeriodDays*PeriodDays 
+  ##########!#################| p3(PeriodDays) 
+            !     ############| RadiusJpt 
+############!#################| PeriodDays 
+############!#################| PlanetaryDensJpt*p3(PeriodDays) 
+            !                 | sin(Eccentricity) 
+            !                 | exp_dbl(1+(PlanetaryDensJpt+((((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt)+(PlanetaryDensJpt*p3(PeriodDays))))) 
+            ! ################| PlanetaryMassJpt 
+            !                 | sigmoid(1+PeriodDays) 
+ ###########!#################| PlanetaryDensJpt 
+            !                 | sigmoid(HostStarMetallicity) 
+            !                 | exp_dbl(sigmoid(1+PeriodDays)) 
+            !                 | (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+            !     ############| TypeFlag 
+            !                 | p3(sin(Eccentricity)) 
+Replaced feature sigmoid(1+PeriodDays) with p3(sin(Eccentricity))*PlanetaryMassJpt 
+Replaced feature sigmoid(HostStarMetallicity) with sigmoid(PeriodDays) 
+Replaced feature TypeFlag with HostStarRadiusSlrRad 
+Population 12 begin. |=                                       |New best population crit: -1523.92751033051 
+ |==                                      |New best population crit: -253.526429304748 
+ |===                                     | |====                                    | |=====                                   | |======                                  | |=======                                 |New best population crit: -79.0076742923331 
+ |========                                |New best population crit: -73.4231206317013 
+ |=========                               | |==========                              | |===========                             | |============                            | |=============                           | |==============                          | |===============                         | |================                        |New best population crit: -73.4231200780633 
+ |=================                       | |==================                      | |===================                     | |====================                    | |=====================                   | |======================                  | |=======================                 | |========================                | |=========================               |New best population crit: -63.1633232018551 
+ |==========================              | |===========================             |New best population crit: -58.0334240096681 
+ |============================            | |=============================           | |==============================          | |===============================         | |================================        | |=================================       | |==================================      | |===================================     | |====================================    | |=====================================   | |======================================  | |======================================= | |========================================| |========================================|New best population crit: -58.0334239332939 
+New best population crit: -43.1181040216829 
+ |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================| |========================================|
+Population 12 done.
+Current best crit: -43.1181040216829 
+Feature importance:
+            !                 | PeriodDays*PeriodDays 
+############!#################| p3(PeriodDays) 
+            !  ###############| RadiusJpt 
+############!#################| PeriodDays 
+############!#################| PlanetaryDensJpt*p3(PeriodDays) 
+            !                 | sin(Eccentricity) 
+            !                 | exp_dbl(1+(PlanetaryDensJpt+((((HostStarMetallicity*HostStarMetallicity)*HostStarMassSlrMass)*PlanetaryDensJpt)+(PlanetaryDensJpt*p3(PeriodDays))))) 
+############!#################| PlanetaryMassJpt 
+            !                 | p3(sin(Eccentricity))*PlanetaryMassJpt 
+############!#################| PlanetaryDensJpt 
+############!#################| sigmoid(PeriodDays) 
+            !                 | exp_dbl(sigmoid(1+PeriodDays)) 
+            !                 | (PeriodDays*HostStarTempK)*(HostStarMetallicity*HostStarMetallicity) 
+            !                 | HostStarRadiusSlrRad 
+            !                 | p3(sin(Eccentricity)) 
+                   Importance | Feature
+                             #| x4*x4 
+  ############################| p3(x4) 
+                  ############| x3 
+##############################| x4 
+##############################| x10*p3(x4) 
+                              | sin(x5) 
+              ################| x2 
+ #############################| x10 
+                  ############| x1 
+
+Best   population: 11  log marginal posterior: -37.99695 
+Report population: 11  log marginal posterior: -37.99695 
+
