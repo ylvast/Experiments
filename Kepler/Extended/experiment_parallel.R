@@ -22,6 +22,7 @@ if (nrow(common_rows) != 0) {
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
+# Runs and saves all needed information from each run
 experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain_number,run,model=NULL){
   # Must set unique seed /// CHECK
   unique_seed <- 4*(run-1)+chain_number
@@ -31,7 +32,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   time_taken <- 0
   if (model_merge){
     time_taken <- system.time({
-      sink(file.path(path, paste0("Output_", chain_number, ".txt")))
+      sink(file.path(path, paste0("Output_", chain_number, ".txt")), append = TRUE)
       model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
                     method = "gmjmcmc", probs = probs, params = params, P = P,
                     N.init = ninit, N.final = nfinal)
@@ -143,6 +144,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   return(model)
 }
 
+# Runs all 6 parallel experiments
 for (ex in c(7:12)) {
   # To specify in model
   P <- experiment_config$P[((ex-1) %% 2)+3]
@@ -174,7 +176,7 @@ for (ex in c(7:12)) {
     class(parallel_runs) <- "gmjmcmc_parallel"
     # Merge runs
     merged_model <- merge_results(parallel_runs, "best", 2, 0.0000001, train)
-    # Save results 
+    # Save merged results 
     experiment_func(dir_path_run,P,ninit,nfinal,params,probs,transforms,ex,5,run,merged_model)
   }
 }

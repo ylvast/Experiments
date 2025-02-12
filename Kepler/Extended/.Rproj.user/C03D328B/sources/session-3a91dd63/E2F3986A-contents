@@ -1,5 +1,0 @@
-library(FBMS)
-df_orig <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Housing/BostonHousing.csv")
-transforms = c("sqrt","p3","p2","p0","sigmoid","exp_dbl")
-model <- fbms(formula = medv ~ ., data = df_orig, transforms = transforms, method = "gmjmcmc", P = 100, N.init=1000, N.final=1000, loglik.alpha = gaussian.loglik.alpha)
-summary(model)

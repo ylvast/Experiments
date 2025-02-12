@@ -25,9 +25,9 @@ experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6
 experiment_func <- function(P,ninit,nfinal,params,probs,transforms,ex,seed){
   set.seed(seed)
   dir_path_seed = file.path(dir_path,seed)
-  dir.create(dir_path_seed)
+  dir.create(dir_path_seed, showWarnings = FALSE)
   time_taken <- system.time({
-    sink(file.path(dir_path_seed,"Output.txt"))
+    sink(file.path(dir_path_seed,"Output.txt"), append = TRUE)
       model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
                     method = "gmjmcmc", probs = probs, params = params, P = P,
                     N.init = ninit, N.final = nfinal)

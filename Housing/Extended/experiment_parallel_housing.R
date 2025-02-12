@@ -27,7 +27,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   set.seed(unique_seed)
   if (model==FALSE){
     time_taken <- system.time({
-      sink(file.path(path,"Output.txt"))
+      sink(file.path(path,"Output.txt"), append = TRUE)
       model <- fbms(formula = MEDV ~ ., data = train, transforms = transforms,
                     method = "gmjmcmc", probs = probs, params = params, P = P,
                     N.init = ninit, N.final = nfinal)
