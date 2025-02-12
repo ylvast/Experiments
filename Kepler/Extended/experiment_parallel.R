@@ -25,7 +25,7 @@ experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6
 # Runs and saves all needed information from each run
 experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain_number,run,model=NULL){
   # Must set unique seed /// CHECK
-  unique_seed <- 4*(run-1)+chain_number
+  unique_seed <- 4*(run-1)+chain_number+1
   set.seed(unique_seed)
 
   model_merge <- is.null(model)
