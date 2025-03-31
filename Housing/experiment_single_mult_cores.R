@@ -106,5 +106,6 @@ for (ex in c(1:6)) {
   params$feat$L <- experiment_config$L
   params$feat$esp <- experiment_config$eps
   params$feat$check.col <- F
+  params$loglik$var = "unknown"
   mclapply(seq_len(experiment_config$count), function (i) experiment_func(chains,P,ninit,nfinal,params,probs,transforms,ex,i), mc.cores=30)
 }

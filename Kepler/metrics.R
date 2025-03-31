@@ -1,11 +1,11 @@
 
 date <- "2024-11-19_09_41"
-#results <- read.csv(paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_",date,".csv", sep=""))
+results <- read.csv(paste("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/","parallel_noise.csv", sep=""))
 results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/Final/30_parallel_50_pop_noise.csv")
 #results <- read.csv(paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/","results_noise",date,".csv", sep=""))
 results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/30_parallel_50_pop_noise.csv")
 
-
+results <- read.csv(paste("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/2025-02-15_10_25_single","merged_results.csv", sep=""))
 
 #colnames <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 colnames <- c("S1","S2","S3","S4","S5","S6")

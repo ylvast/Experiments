@@ -1,3 +1,4 @@
+setwd("/uio/hume/student-u69/ylvasto/privat/Experiments")
 source("./Kepler/config.R")
 source("./Kepler/helpers.R")
 library(devtools)
@@ -5,25 +6,18 @@ install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 library(randomForest)
 library(dplyr)
-
 #set.seed(2024)
 
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
 Results <- paste("./Kepler/","results_",now,".csv", sep="")
-train <- read.csv("./Kepler/train.csv")
+train <- read.csv("./Kepler/train_noisy.csv")
 test <- read.csv("./Kepler/test.csv")
-
-# Simple checks
-common_rows <- inner_join(train, test, by = names(train))
-if (nrow(common_rows) != 0) {
-  stop("Error: There are common rows between training and testing sets.")
-}
 
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
 # Running the experiments
-for (ex in c(1:6)){
+for (ex in c(7:12)){
   
   # To specify in model
   chains <- experiment_config$B[ifelse(ex <= 6, 1, 2)]
@@ -46,14 +40,14 @@ for (ex in c(1:6)){
   params$feat$D <- experiment_config$D
   params$feat$L <- experiment_config$L
   params$feat$esp <- experiment_config$eps
-  
+  params$loglik$var = "unknown"
   
   # Run each experiment count times
   for (number in c(1:experiment_config$count)){
     # The model
     if (chains != 1){
       time_taken <- system.time({
-        model <- fbms(formula = MajorAxis ~ ., runs = chains, cores = 1, data = train, # Change more cores
+        model <- fbms(formula = MajorAxisNoisy ~ ., runs = chains, cores = chains, data = train, # Change more cores
                       transforms = transforms, method = "gmjmcmc.parallel", probs = probs,
                       params = params, P = P, N.init = ninit, N.final = nfinal)
       })
@@ -121,36 +115,4 @@ for (ex in c(1:6)){
       write.csv(current_results, Results, row.names = FALSE)
     }
   }
-}
-
-# Random forest for comparison
-model_rf <- randomForest(MajorAxis ~ ., data = train, ntree = 100, mtry = 3, importance = TRUE)
-# Make predictions on the test set
-predictions_rf <- predict(model_rf, newdata = test[,-1])
-
-# Calculate the sum of squared errors (SSE) for the Random Forest model
-mae_rf <- mean(abs(predictions_rf - test$MajorAxis))
-
-
-current_results <- data.frame(
-  Experiment = "Randomforest",
-  Run = "1",
-  F1 = "NA",
-  F2 = "NA",
-  F3 = "NA",
-  F4 = "NA",
-  Count_FP = "NA",
-  Correlation = "NA",
-  Correlation_FP = "NA",
-  MAE = mae_rf,
-  Count_P = "NA",
-  Time = "NA",
-  FirstFeature = "NA",
-  SecondFeature = "NA",
-  ThirdFeature = "NA"
-)
-if (file.exists(Results)) {
-  write.table(current_results, Results, append = TRUE, sep = ",", row.names = FALSE, col.names = FALSE)
-} else {
-  write.csv(current_results, Results, row.names = FALSE)
 }

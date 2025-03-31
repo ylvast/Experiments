@@ -11,10 +11,6 @@ set.seed(2024)
 train <- read.csv("./Housing/train.csv")
 test <- read.csv("./Housing/test.csv")
 
-train <- read.csv("./train.csv")
-test <- read.csv("./test.csv")
-dim(test)
-
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
 Results <- paste("./Housing/","results_",now,".csv", sep="")
@@ -53,6 +49,7 @@ for (ex in c(7:12)){
   params$feat$L <- experiment_config$L
   params$feat$esp <- experiment_config$eps
   params$feat$check.col <- F
+  params$loglik$var = "unknown"
   
   
   # Run each experiment count times

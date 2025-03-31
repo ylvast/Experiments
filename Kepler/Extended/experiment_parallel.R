@@ -6,26 +6,22 @@ library(FBMS)
 library(dplyr)
 library(parallel)
 
-train <- read.csv("./Kepler/train.csv")
+train <- read.csv("./Kepler/train_noisy.csv")
 test <- read.csv("./Kepler/test.csv")
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
 dir_path = file.path("./Kepler/Extended",now)
 dir.create(dir_path)
 
-# Simple checks
-common_rows <- inner_join(train, test, by = names(train))
-if (nrow(common_rows) != 0) {
-  stop("Error: There are common rows between training and testing sets.")
-}
-
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
+
+fillers <- 40
 
 # Runs and saves all needed information from each run
 experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain_number,run,model=NULL){
   # Must set unique seed /// CHECK
-  unique_seed <- 4*(run-1)+chain_number+1
+  unique_seed <- 4*(run+fillers-1)+chain_number+1
   set.seed(unique_seed)
 
   model_merge <- is.null(model)
@@ -33,7 +29,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   if (model_merge){
     time_taken <- system.time({
       sink(file.path(path, paste0("Output_", chain_number, ".txt")), append = TRUE)
-      model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
+      model <- fbms(formula = MajorAxisNoisy ~ ., data = train, transforms = transforms,
                     method = "gmjmcmc", probs = probs, params = params, P = P,
                     N.init = ninit, N.final = nfinal)
       summary(model)
@@ -85,11 +81,10 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   # Time elapsed
   elapsed_time <- time_taken["elapsed"]
   
-  
   # Write to csv
   current_results <- data.frame(
     Experiment = experiment_names[ex],
-    Run = run,
+    Run = run+fillers,
     F1 = F1,
     F2 = F2,
     F3 = F3,
@@ -98,7 +93,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
     Correlation = cor,
     Correlation_FP = cor_fp,
     MAE = mae,
-    LMP = max(unlist(model$best.margs)),
+    LMP = if (!model_merge) model$reported[[1]] else max(unlist(model$best.margs)),
     R2 = r2,
     Count_P = length(features),
     Time = elapsed_time,
@@ -131,7 +126,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   summary_comp <- summary(model, tol=0.001, pop="best")
   features_comp <- summary_comp$feats.strings
   margs <- summary_comp$marg.probs
-  run_data <- data.frame(Experiment = rep(experiment_names[ex],length(features_comp)), Run = rep(run, length(features_comp)), Number = paste0("Feature", 1:length(features_comp)), 
+  run_data <- data.frame(Experiment = rep(experiment_names[ex],length(features_comp)), Run = rep(run+fillers, length(features_comp)), Number = paste0("Feature", 1:length(features_comp)), 
                          Feature = features_comp, Margs = margs)
   
   # If the CSV file already exists, append new rows (avoid overwriting)
@@ -145,7 +140,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
 }
 
 # Runs all 6 parallel experiments
-for (ex in c(7:12)) {
+for (ex in c(11)) {
   # To specify in model
   P <- experiment_config$P[((ex-1) %% 2)+3]
   ninit <- experiment_config$N_init[((ex-1) %% 2)+1]
@@ -166,10 +161,11 @@ for (ex in c(7:12)) {
   params$feat$D <- experiment_config$D
   params$feat$L <- experiment_config$L
   params$feat$esp <- experiment_config$eps
+  params$loglik$var = "unknown"
   # Run all 30 runs
   for (run in c(1:experiment_config$count)) {
     # Create folder for each run
-    dir_path_run = file.path(dir_path,run)
+    dir_path_run = file.path(dir_path,run+filler)
     dir.create(dir_path_run)
     # Run parallel runs
     parallel_runs <- mclapply(seq_len(experiment_config$B[2]), function (i) experiment_func(dir_path_run,P,ninit,nfinal,params,probs,transforms,ex,i,run), mc.cores=experiment_config$B[2])

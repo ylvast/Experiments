@@ -1,10 +1,13 @@
 
-results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/Extended/Results/Single_results/merged_results_mod.csv")
-feature_results <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/Extended/Results/Single_results/merged_features_mod.csv")
-source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/helpers.R")
+results <- read.csv("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/Extended/2025-02-26_16_32_parallel_fixed/merged_results.csv")
+feature_results <- read.csv("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/Extended/2025-02-26_16_32_parallel_fixed/merged_features.csv")
+source("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/helpers.R")
 library(FBMS)
 results
 summary(results)
+dim(results)
+
+
 s1 <- feature_results[feature_results$Experiment=="S1",]
 s2 <- feature_results[feature_results$Experiment=="S2",]
 s3 <- feature_results[feature_results$Experiment=="S3",]
@@ -25,7 +28,7 @@ list_of_s5
 list_of_s6
 
 colnames <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
-colnames <- c("S1","S2","S3","S4","S5","S6")
+colnames <- c("P1","P2","P3","P4","P5","P6")
 rownames <- c("Pow","F1","F2","F3","F4","Count_P","Count_FP","FDR","Correlation_P","Correlation_FP","MAE","Time","Correlation_P_Med",
               "Correlation_P_Max","Correlation_P_Min","Correlation_FP_Med","Correlation_FP_Max","Correlation_FP_Min","MAE_Med","MAE_Max",
               "MAE_Min", "R_Med", "R_Min", "R_Max", "LMP_Med", "LMP_Min", "LMP_Max", "pos_Med","pos_Min","pos_Max")
@@ -64,12 +67,15 @@ for (experiment in colnames) {
   Metrics["R_Min",experiment] <- min(as.numeric(exp_df$R2), na.rm = TRUE)
   Metrics["R_Max",experiment] <- max(as.numeric(exp_df$R2), na.rm = TRUE)
   list_of_margs <- max_prob_tp(10,features_df)
-  cat(list_of_margs)
-  Metrics["pos_Med",experiment] <- median(list_of_margs, na.rm = TRUE)
-  Metrics["pos_Min",experiment] <- min(list_of_margs, na.rm = TRUE)
+  Metrics["pos_Med",experiment] <- median(list_of_margs[list_of_margs>0.1], na.rm = TRUE)
+  Metrics["pos_Min",experiment] <- min(list_of_margs[list_of_margs>0.1], na.rm = TRUE)
   Metrics["pos_Max",experiment] <- max(list_of_margs, na.rm = TRUE)
   Metrics["Time",experiment] <- mean(as.numeric(exp_df$Time))
 }
 
+features_df <- feature_results[feature_results$Experiment=="S1",]
+max_prob_tp(10,features_df)
 Metrics
 list_of_margs
+
+dim(results)

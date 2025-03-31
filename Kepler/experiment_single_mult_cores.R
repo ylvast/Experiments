@@ -17,18 +17,11 @@ dir.create(dir_path)
 writeLines(capture.output(dput(experiment_config)), file.path(dir_path,"config_input.txt"))
 
 
-
-# Simple checks
-common_rows <- inner_join(train, test, by = names(train))
-if (nrow(common_rows) != 0) {
-  stop("Error: There are common rows between training and testing sets.")
-}
-
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
 experiment_func <- function(P,ninit,nfinal,params,probs,transforms,ex,seed){
-  set.seed(seed)
+  set.seed(seed+2025) # +2025 if extra
   dir_path_seed = file.path(dir_path,seed)
   dir.create(dir_path_seed, showWarnings = FALSE)
   time_taken <- system.time({

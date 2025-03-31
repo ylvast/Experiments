@@ -1,15 +1,15 @@
-source("/uio/hume/student-u69/ylvasto/privat/Experiments/Abalone/config.R")
+source("./Abalone/config.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 library(dplyr)
 library(parallel)
 
-train <- read.csv("/uio/hume/student-u69/ylvasto/privat/Experiments/Abalone/train.csv")
-test <- read.csv("/uio/hume/student-u69/ylvasto/privat/Experiments/Abalone/test.csv")
+train <- read.csv("./Abalone/train.csv")
+test <- read.csv("./Abalone/test.csv")
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-dir_path = paste("/uio/hume/student-u69/ylvasto/privat/Experiments/Abalone/",now)
+dir_path = paste("./Abalone/",now)
 dir.create(dir_path)
 
 # Simple checks
@@ -85,25 +85,26 @@ experiment_func <- function(chains,P,ninit,nfinal,params,probs,transforms,ex,see
 
 for (ex in c(1:6)) {
   # To specify in model
-  chains <- experiment_config$B[ifelse(ex <= 6, 1, 2)]
-  P <- experiment_config$P[ifelse(ex <= 6, 1, 2)]
-  ninit <- experiment_config$N_init
-  nfinal <- experiment_config$N_final
-  transforms <- experiment_config$transforms
+  chains <- abalone_config$B[ifelse(ex <= 6, 1, 2)]
+  P <- abalone_config$P[ifelse(ex <= 6, 1, 2)]
+  ninit <- abalone_config$N_init
+  nfinal <- abalone_config$N_final
+  transforms <- abalone_config$transforms
   
   # Fix params and probs
   probs <- gen.probs.gmjmcmc(transforms)
   params <- gen.params.gmjmcmc(train)
   if (ex %in% c(1,2,7,8)){
-    probs$gen <- experiment_config$probs[[1]]
+    probs$gen <- abalone_config$probs[[1]]
   } else if (ex %in% c(3,4,9,10)){
-    probs$gen <- experiment_config$probs[[2]]
+    probs$gen <- abalone_config$probs[[2]]
   } else if (ex %in% c(5,6,11,12)){
-    probs$gen <- experiment_config$probs[[3]]
+    probs$gen <- abalone_config$probs[[3]]
   }
-  params$feat$pop.max <- experiment_config$Q[((ex-1) %% 2)+1]
-  params$feat$D <- experiment_config$D
-  params$feat$L <- experiment_config$L
-  params$feat$esp <- experiment_config$eps
-  mclapply(seq_len(experiment_config$count), function (i) experiment_func(chains,P,ninit,nfinal,params,probs,transforms,ex,i), mc.cores=30)
+  params$feat$pop.max <- abalone_config$Q[((ex-1) %% 2)+1]
+  params$feat$D <- abalone_config$D
+  params$feat$L <- abalone_config$L
+  params$feat$esp <- abalone_config$eps
+  params$loglik$var = "unknown"
+  mclapply(seq_len(abalone_config$count), function (i) experiment_func(chains,P,ninit,nfinal,params,probs,transforms,ex,i), mc.cores=abalone_config$count)
 }

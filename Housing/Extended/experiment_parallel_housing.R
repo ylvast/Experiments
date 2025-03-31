@@ -18,16 +18,23 @@ if (nrow(common_rows) != 0) {
   stop("Error: There are common rows between training and testing sets.")
 }
 
+config_file <- file.path(dir_path, "experiment_config.txt")
+
+# Write the experiment_config list to the file
+writeLines(capture.output(print(experiment_config)), config_file)
+
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
-experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain_number,run,model=FALSE){
+experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain_number,run,model=NULL){
   # Must set unique seed /// CHECK
-  unique_seed <- 4^(run-1)+chain_number-1
+  unique_seed <- 4*(run-1)+chain_number+1
   set.seed(unique_seed)
-  if (model==FALSE){
+  model_merge <- is.null(model)
+  time_taken <- 0
+  if (model_merge){
     time_taken <- system.time({
-      sink(file.path(path,"Output.txt"), append = TRUE)
+      sink(file.path(path, paste0("Output_", chain_number, ".txt")), append = TRUE)
       model <- fbms(formula = MEDV ~ ., data = train, transforms = transforms,
                     method = "gmjmcmc", probs = probs, params = params, P = P,
                     N.init = ninit, N.final = nfinal)
@@ -75,8 +82,9 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
     Experiment = experiment_names[ex],
     Run = run,
     Correlation = cor,
+    RMSE = rmse,
     MAE = mae,
-    LMP = max(unlist(model$best.margs)),
+    LMP = if (!model_merge) model$reported[[1]] else max(unlist(model$best.margs)),
     R2 = r2,
     Count_P = length(features),
     Time = elapsed_time,
@@ -87,7 +95,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
     SecondM = marg2,
     ThirdM = marg3
   )
-  if (model==FALSE){
+  if (model_merge){
     Results <- paste(path,"/results_",chain_number,".csv", sep="")
   } else {
     Results <- paste(path,"/merged_results.csv", sep="")
@@ -99,17 +107,17 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   }
   
   # Adding complete list of features with probabilities
-  if (model==FALSE){
+  if (model_merge){
     Results_features <- paste(path,"/features_",chain_number,".csv", sep="")
   } else {
-    Results <- paste(path,"/merged_features.csv", sep="")
+    Results_features <- paste(path,"/merged_features.csv", sep="")
   }
   
   # Summary with lower tolerance
   summary_comp <- summary(model, tol=0.001, pop="best")
   features_comp <- summary_comp$feats.strings
   margs <- summary_comp$marg.probs
-  run_data <- data.frame(Experiment = rep(experiment_names[ex],length(features_comp)), Run = rep(seed, length(features_comp)), Number = paste0("Feature", 1:length(features_comp)), 
+  run_data <- data.frame(Experiment = rep(experiment_names[ex],length(features_comp)), Run = rep(run, length(features_comp)), Number = paste0("Feature", 1:length(features_comp)), 
                          Feature = features_comp, Margs = margs)
   
   # If the CSV file already exists, append new rows (avoid overwriting)
@@ -143,8 +151,10 @@ for (ex in c(7:12)) {
   params$feat$D <- experiment_config$D
   params$feat$L <- experiment_config$L
   params$feat$esp <- experiment_config$eps
+  params$feat$check.col <- F
+  params$loglik$var = "unknown"
   # Run all 30 runs
-  for (run in c(1:30)) {
+  for (run in c(1:experiment_config$count)) {
     # Create folder for each run
     dir_path_run = file.path(dir_path,run)
     dir.create(dir_path_run)
@@ -154,6 +164,6 @@ for (ex in c(7:12)) {
     # Merge runs
     merged_model <- merge_results(parallel_runs, "best", 2, 0.0000001, train)
     # Save results 
-    experiment_func(dir_path_run,P,ninit,nfinal,params,probs,transforms,ex,i,run,merged_model)
+    experiment_func(dir_path_run,P,ninit,nfinal,params,probs,transforms,ex,5,run,merged_model)
   }
 }

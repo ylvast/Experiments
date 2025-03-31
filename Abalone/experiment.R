@@ -1,13 +1,12 @@
 # Abalone
-
+setwd("/uio/hume/student-u69/ylvasto/privat/Experiments")
 source("./Abalone/config.R")
-# source("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/config.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 library(dplyr)
 
-set.seed(2024)
+set.seed(2025)
 
 train <- read.csv("./Abalone/train.csv")
 test <- read.csv("./Abalone/test.csv")
@@ -15,12 +14,6 @@ test <- read.csv("./Abalone/test.csv")
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
 Results <- paste("./Abalone/","results_",now,".csv", sep="")
-
-# train <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/train.csv")
-# test <- read.csv("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/test.csv")
-# # Result csv
-# now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-# Results <- paste("/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Abalone/","results_",now,".csv", sep="")
 
 # Simple checks
 common_rows <- inner_join(train, test, by = names(train))
@@ -32,37 +25,37 @@ if (nrow(common_rows) != 0) {
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
 # Running the experiments
-for (ex in c(7:12)){
+for (ex in c(12:12)){
   
   # To specify in model
-  chains <- experiment_config$B[ifelse(ex <= 6, 1, 2)]
-  P <- experiment_config$P[ifelse(ex <= 6, 1, 2)]
-  ninit <- experiment_config$N_init
-  nfinal <- experiment_config$N_final
-  transforms <- experiment_config$transforms
+  chains <- abalone_config$B[ifelse(ex <= 6, 1, 2)]
+  P <- abalone_config$P[ifelse(ex <= 6, 1, 2)]
+  ninit <- abalone_config$N_init
+  nfinal <- abalone_config$N_final
+  transforms <- abalone_config$transforms
   
   # Fix params and probs
   probs <- gen.probs.gmjmcmc(transforms)
   params <- gen.params.gmjmcmc(train)
   if (ex %in% c(1,2,7,8)){
-    probs$gen <- experiment_config$probs[[1]]
+    probs$gen <- abalone_config$probs[[1]]
   } else if (ex %in% c(3,4,9,10)){
-    probs$gen <- experiment_config$probs[[2]]
+    probs$gen <- abalone_config$probs[[2]]
   } else if (ex %in% c(5,6,11,12)){
-    probs$gen <- experiment_config$probs[[3]]
+    probs$gen <- abalone_config$probs[[3]]
   }
-  params$feat$pop.max <- experiment_config$Q[((ex-1) %% 2)+1]
-  params$feat$D <- experiment_config$D
-  params$feat$L <- experiment_config$L
-  params$feat$esp <- experiment_config$eps
-  
+  params$feat$pop.max <- abalone_config$Q[((ex-1) %% 2)+1]
+  params$feat$D <- abalone_config$D
+  params$feat$L <- abalone_config$L
+  params$feat$esp <- abalone_config$eps
+  params$loglik$var = "unknown"
   
   # Run each experiment count times
-  for (number in c(1:experiment_config$count)){
+  for (number in c(1:abalone_config$count)){
     # The model
     if (chains != 1){
       time_taken <- system.time({
-        model <- fbms(formula = Rings ~ ., runs = chains, cores = 1, data = train, 
+        model <- fbms(formula = Rings ~ ., runs = chains, cores = chains, data = train, 
                       transforms = transforms, method = "gmjmcmc.parallel", probs = probs,
                       params = params, P = P, N.init = ninit, N.final = nfinal)
       })
