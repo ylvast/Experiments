@@ -1,5 +1,5 @@
 # Define the parent folder where the 30 subfolders are located
-parent_folder <- "/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/results_April2025-04-01_00_44"
+parent_folder <- "/Users/ylvasofietollefsen/Library/Mobile Documents/com~apple~CloudDocs/Master/Experiments/Final_Results/PMLBR/2025-03-28_19_57_FIRST_FINAL"
 
 #folder <- "/uio/hume/student-u69/ylvasto/privat/Experiments/PMLBR/2025-03-10_17_16/8/results.csv"
 #dat <- read.csv(folder)
@@ -7,7 +7,7 @@ parent_folder <- "/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/result
 type <- "results"
 
 # Generate folder names (assuming they are named "1", "2", ..., "30")
-folder_names <- as.character(1:30)
+folder_names <- as.character(1:10)
 
 # Combine both sets of folder names
 all_folder_names <- c(folder_names)
@@ -16,10 +16,10 @@ all_folder_names <- c(folder_names)
 library(dplyr)
 
 merged_data <- bind_rows(lapply(all_folder_names, function(folder) {
-  #file_path <- file.path(parent_folder, folder, "results.csv")
+  file_path <- file.path(parent_folder, folder, "results.csv")
   #file_path <- file.path(parent_folder, folder, paste0("merged_",type,".csv"))
   #file_path <- file.path(parent_folder, paste0(type,"_", folder, ".csv"))
-  file_path <- file.path(parent_folder,folder, paste0(type,"_", folder, ".csv"))
+  #file_path <- file.path(parent_folder,folder, paste0(type,"_", folder, ".csv"))
   if (file.exists(file_path)) {
     read.csv(file_path)
   } else {
