@@ -6,11 +6,11 @@ library(FBMS)
 library(dplyr)
 library(parallel)
 
-train <- read.csv("./Kepler/train.csv")
+train <- read.csv("./Kepler/train_noisy.csv")
 test <- read.csv("./Kepler/test.csv")
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-dir_path = file.path("./Kepler",now)
+dir_path = file.path("./Kepler",paste("results_April_noise_",now, sep=""))
 dir.create(dir_path)
 
 # Save config
@@ -26,7 +26,7 @@ experiment_func <- function(P,ninit,nfinal,params,probs,transforms,ex,seed){
   dir.create(dir_path_seed, showWarnings = FALSE)
   time_taken <- system.time({
     sink(file.path(dir_path_seed,"Output.txt"), append = TRUE)
-    model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
+    model <- fbms(formula = MajorAxisNoisy ~ ., data = train, transforms = transforms,
                   method = "gmjmcmc", probs = probs, params = params, P = P,
                   N.init = ninit, N.final = nfinal)
     summary(model)

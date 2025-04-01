@@ -14,8 +14,8 @@
 
 
 experiment_config <- list(
-  count = 40,
-  transforms = c("sigmoid","sin_deg","exp_dbl","troot","p0","p3"),
+  count = 30,
+  transforms = c("sigmoid","sin_deg","exp_dbl","troot"),
   eps = 0.05,
   D = 10,
   L = 5,
