@@ -1,5 +1,7 @@
-# Define the parent directory containing the 30 folders
-parent_dir <- "/Users/ylvasofietollefsen/Documents/Uio/Master/Experiments/Kepler/Extended/Results/Single_results"
+# Only used to merge files to a csv file
+
+# The parent directory containing the 30 folders
+parent_dir <- "./Results/Single_results"
 
 # Get all folder names (1 to 30)
 folder_names <- as.character(1:30)

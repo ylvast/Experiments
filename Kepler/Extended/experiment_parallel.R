@@ -1,27 +1,34 @@
-source("./Kepler/Extended/config_ex.R")
-source("./Kepler/helpers.R")
+# Script to run parallel-chain experiments, extended
+
+source("./config_ex.R")
+source("../helpers.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 library(dplyr)
 library(parallel)
 
-train <- read.csv("./Kepler/train_noisy.csv")
-test <- read.csv("./Kepler/test.csv")
+noise <- FALSE
+
+if(noise){
+  train <- read.csv("../train_noisy.csv")
+} else{
+  train <- read.csv("../train.csv")
+}
+
+test <- read.csv("../test.csv")
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-dir_path = file.path("./Kepler/Extended",now)
+dir_path = file.path(now)
 dir.create(dir_path)
 
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
-fillers <- 40
-
 # Runs and saves all needed information from each run
 experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain_number,run,model=NULL){
   # Must set unique seed /// CHECK
-  unique_seed <- 4*(run+fillers-1)+chain_number+1
+  unique_seed <- 4*(run-1)+chain_number+1
   set.seed(unique_seed)
 
   model_merge <- is.null(model)
@@ -29,9 +36,15 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   if (model_merge){
     time_taken <- system.time({
       sink(file.path(path, paste0("Output_", chain_number, ".txt")), append = TRUE)
-      model <- fbms(formula = MajorAxisNoisy ~ ., data = train, transforms = transforms,
-                    method = "gmjmcmc", probs = probs, params = params, P = P,
-                    N.init = ninit, N.final = nfinal)
+      if(noise){
+        model <- fbms(formula = MajorAxisNoisy ~ ., data = train, transforms = transforms,
+                      method = "gmjmcmc", probs = probs, params = params, P = P,
+                      N.init = ninit, N.final = nfinal)
+      } else{
+        model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
+                      method = "gmjmcmc", probs = probs, params = params, P = P,
+                      N.init = ninit, N.final = nfinal)
+      }
       summary(model)
       sink()
     })
@@ -84,7 +97,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   # Write to csv
   current_results <- data.frame(
     Experiment = experiment_names[ex],
-    Run = run+fillers,
+    Run = run,
     F1 = F1,
     F2 = F2,
     F3 = F3,
@@ -126,7 +139,7 @@ experiment_func <- function(path,P,ninit,nfinal,params,probs,transforms,ex,chain
   summary_comp <- summary(model, tol=0.001, pop="best")
   features_comp <- summary_comp$feats.strings
   margs <- summary_comp$marg.probs
-  run_data <- data.frame(Experiment = rep(experiment_names[ex],length(features_comp)), Run = rep(run+fillers, length(features_comp)), Number = paste0("Feature", 1:length(features_comp)), 
+  run_data <- data.frame(Experiment = rep(experiment_names[ex],length(features_comp)), Run = rep(run, length(features_comp)), Number = paste0("Feature", 1:length(features_comp)), 
                          Feature = features_comp, Margs = margs)
   
   # If the CSV file already exists, append new rows (avoid overwriting)

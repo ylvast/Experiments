@@ -1,8 +1,8 @@
-# path <- "/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/Extended/2025-02-26_16_32_parallel_fixed"
-# folders <- c(1:50)
-path <- "/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/Extended/2025-02-28_09_57_noise_parallel_fixed"
-folders <- c(1:36)
-folders <- c(folders,"23x","25x","26x","27x","30x","31x","32x","34x","36x","37x","38x","39x","40x",41,42,44,45,46,38,39,40)
+# Script to get the phi-metric for the parallel chain
+
+path <- "./Results/Parallel_results"
+# path <- "./Results/Parallel_results_noise"
+folders <- c(1:30)
 
 results <- data.frame(minOne = rep(NA, 6), Zero = rep(NA, 6))
 rownames(results) <- c("P1", "P2", "P3", "P4", "P5", "P6")

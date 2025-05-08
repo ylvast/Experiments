@@ -1,4 +1,4 @@
-# Housing
+# Script that can run all experiments, used to run the parallel-chain experiments
 
 source("./Housing/config.R")
 library(devtools)
@@ -8,12 +8,12 @@ library(dplyr)
 
 set.seed(2024)
 
-train <- read.csv("./Housing/train.csv")
-test <- read.csv("./Housing/test.csv")
+train <- read.csv("./train.csv")
+test <- read.csv("./test.csv")
 
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-Results <- paste("./Housing/","results_",now,".csv", sep="")
+Results <- paste("results_",now,".csv", sep="")
 
 # Simple checks
 common_rows <- inner_join(train, test, by = names(train))

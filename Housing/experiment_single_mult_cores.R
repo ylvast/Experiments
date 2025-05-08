@@ -1,15 +1,17 @@
-source("./Housing/config.R")
+# Script to run single-chain experiments on multiple cores
+
+testsource("./config.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 library(dplyr)
 library(parallel)
 
-train <- read.csv("./Housing/train.csv")
-test <- read.csv("./Housing/test.csv")
+train <- read.csv(".train.csv")
+test <- read.csv("./test.csv")
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-dir_path = paste("./Housing/",now)
+dir_path = now
 dir.create(dir_path)
 
 # Simple checks

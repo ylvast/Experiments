@@ -1,3 +1,5 @@
+# Functions used to calculate some metrics
+
 
 # Returns number of true positives
 any_tp <- function (col_number, features, kepler_feature = c("troot(x4*x4*x6)","troot(x4*x4*x9*x9)","troot(x4*x4*x9)","troot(x4*x4*x7)")) {

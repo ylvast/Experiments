@@ -1,6 +1,7 @@
-# Housing
+# Metrics for the initial BOston Housing experiments
 
-results <- read.csv("/uio/hume/student-u69/ylvasto/privat/Experiments/Housing/ 2025-02-23_21_46/merged_results.csv")
+# results <- read.csv("./Results/Single_results/merged_results.csv")
+results <- read.csv("./Results/Parallel_results.csv")
 
 colnames <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 rownames <- c("Correlation","MAE","RMSE","Time")
@@ -8,7 +9,6 @@ Metrics <- data.frame(matrix(ncol = length(colnames), nrow = length(rownames)))
 colnames(Metrics) <- colnames
 rownames(Metrics) <- rownames
 
-results <- results[-85,]
 for (experiment in colnames) {
   exp_df <- results[results$Experiment==experiment,]
   exp_df <- exp_df[rowSums(is.na(exp_df)) != ncol(exp_df), ]
@@ -28,3 +28,4 @@ for (experiment in colnames) {
 }
 
 Metrics
+

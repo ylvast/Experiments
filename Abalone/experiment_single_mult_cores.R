@@ -1,15 +1,19 @@
-source("./Abalone/config.R")
+# Script that runs the single-chain experiments using multiple cores
+
+# Packages and config file
+source("./config.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 library(dplyr)
 library(parallel)
 
-train <- read.csv("./Abalone/train.csv")
-test <- read.csv("./Abalone/test.csv")
-# Result csv
-now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-dir_path = paste("./Abalone/",now)
+train <- read.csv("./train.csv")
+test <- read.csv("./test.csv")
+
+# Result folder
+now <- format(Sys.time(), "%Y-%m-%d_%H_%M")
+dir_path <- now
 dir.create(dir_path)
 
 # Simple checks

@@ -1,19 +1,19 @@
-# Abalone
-setwd("/uio/hume/student-u69/ylvasto/privat/Experiments")
-source("./Abalone/config.R")
+# Script that runs the specified experiments, only using multiple cores in the parallel-chain experiments
+# Only creates one csv-file with the results
+
+# Packages and config
+source("./config.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 library(dplyr)
 
-set.seed(2025)
-
-train <- read.csv("./Abalone/train.csv")
-test <- read.csv("./Abalone/test.csv")
+train <- read.csv("./train.csv")
+test <- read.csv("./test.csv")
 
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-Results <- paste("./Abalone/","results_",now,".csv", sep="")
+Results <- paste("results_",now,".csv", sep="")
 
 # Simple checks
 common_rows <- inner_join(train, test, by = names(train))
@@ -24,8 +24,8 @@ if (nrow(common_rows) != 0) {
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
-# Running the experiments
-for (ex in c(12:12)){
+# Running the experiments, if only running the parallel-chain: 7:12
+for (ex in c(1:12)){
   
   # To specify in model
   chains <- abalone_config$B[ifelse(ex <= 6, 1, 2)]

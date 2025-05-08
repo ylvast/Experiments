@@ -1,23 +1,27 @@
-source("./Kepler/Extended/config_ex.R")
-source("./Kepler/helpers.R")
+# Script to run the single-chain extended experiments for the Exoplanet dataset
+
+source("./config_ex.R")
+source("../helpers.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 library(dplyr)
 library(parallel)
 
-train <- read.csv("./Kepler/train.csv")
-test <- read.csv("./Kepler/test.csv")
+# Whether to use data with added noise
+noise <- FALSE
+
+if(noise){
+  train <- read.csv("../train_noisy.csv")
+} else{
+  train <- read.csv("../train.csv")
+}
+
+test <- read.csv("../test.csv")
 # Result csv
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-dir_path = file.path("./Kepler/Extended",now)
+dir_path = file.path(now)
 dir.create(dir_path)
-
-# Simple checks
-common_rows <- inner_join(train, test, by = names(train))
-if (nrow(common_rows) != 0) {
-  stop("Error: There are common rows between training and testing sets.")
-}
 
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
@@ -28,9 +32,15 @@ experiment_func <- function(P,ninit,nfinal,params,probs,transforms,ex,seed){
   dir.create(dir_path_seed, showWarnings = FALSE)
   time_taken <- system.time({
     sink(file.path(dir_path_seed,"Output.txt"), append = TRUE)
+    if(noise){
+      model <- fbms(formula = MajorAxisNoisy ~ ., data = train, transforms = transforms,
+                    method = "gmjmcmc", probs = probs, params = params, P = P,
+                    N.init = ninit, N.final = nfinal)
+    } else{
       model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
                     method = "gmjmcmc", probs = probs, params = params, P = P,
                     N.init = ninit, N.final = nfinal)
+    }
       summary(model)
       sink()
   })

@@ -1,23 +1,28 @@
-setwd("/uio/hume/student-u69/ylvasto/privat/Experiments")
-source("./Kepler/config.R")
-source("./Kepler/helpers.R")
+# Script that can be used to run all experiments, only returns one csv file with results
+
+source("./config.R")
+source("./helpers.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
-library(randomForest)
-library(dplyr)
-#set.seed(2024)
+
+# If noisy or not noisy data
+noise <- FALSE
 
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-Results <- paste("./Kepler/","results_",now,".csv", sep="")
-train <- read.csv("./Kepler/train_noisy.csv")
-test <- read.csv("./Kepler/test.csv")
+Results <- paste("./","results",now,".csv", sep="")
+if(noise){
+  train <- read.csv("./train_noisy.csv")
+} else{
+  train <- read.csv("./train.csv")
+}
+test <- read.csv("./test.csv")
 
 # Name of each experiment, same order as in thesis table
 experiment_names <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 
 # Running the experiments
-for (ex in c(7:12)){
+for (ex in c(1:12)){
   
   # To specify in model
   chains <- experiment_config$B[ifelse(ex <= 6, 1, 2)]
@@ -42,20 +47,34 @@ for (ex in c(7:12)){
   params$feat$esp <- experiment_config$eps
   params$loglik$var = "unknown"
   
+  
   # Run each experiment count times
   for (number in c(1:experiment_config$count)){
     # The model
     if (chains != 1){
       time_taken <- system.time({
-        model <- fbms(formula = MajorAxisNoisy ~ ., runs = chains, cores = chains, data = train, # Change more cores
-                      transforms = transforms, method = "gmjmcmc.parallel", probs = probs,
-                      params = params, P = P, N.init = ninit, N.final = nfinal)
+        if(noise){
+          model <- fbms(formula = MajorAxisNoisy ~ ., runs = chains, cores = chains, data = train,
+                        transforms = transforms, method = "gmjmcmc.parallel", probs = probs,
+                        params = params, P = P, N.init = ninit, N.final = nfinal)
+        } else{
+          model <- fbms(formula = MajorAxis~ ., runs = chains, cores = chains, data = train, 
+                        transforms = transforms, method = "gmjmcmc.parallel", probs = probs,
+                        params = params, P = P, N.init = ninit, N.final = nfinal)
+        } else{
+        }
       })
     } else {
       time_taken <- system.time({
-        model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
-                      method = "gmjmcmc", probs = probs, params = params, P = P, 
-                      N.init = ninit, N.final = nfinal)
+        if(noise){
+          model <- fbms(formula = MajorAxisNoisy ~ ., data = train, transforms = transforms,
+                        method = "gmjmcmc", probs = probs, params = params, P = P, 
+                        N.init = ninit, N.final = nfinal)
+        } else{
+          model <- fbms(formula = MajorAxis ~ ., data = train, transforms = transforms,
+                        method = "gmjmcmc", probs = probs, params = params, P = P, 
+                        N.init = ninit, N.final = nfinal)
+        }
       })
     }
 
@@ -87,7 +106,7 @@ for (ex in c(7:12)){
     # Time elapsed
     elapsed_time <- time_taken["elapsed"]
     
-    # MAE 
+    # MAE
     preds <- predict(model,test[,-1])$aggr$mean
     mae <- mean(abs(preds-test$MajorAxis))
     

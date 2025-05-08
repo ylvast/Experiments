@@ -1,12 +1,18 @@
+# Script to get the results from the initial experiments
 
-date <- "2024-11-19_09_41"
-results <- read.csv("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/results_April2025-04-01_00_44/merged_results.csv")
+# Single-chain without noise, comment in 
+# results <- read.csv("./Results/Single_results/merged_results.csv")
 
-#results <- read.csv(paste("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/2025-02-15_10_25_single","merged_results.csv", sep=""))
+# Parallel-chain without noise, comment in
+# results <- read.csv("./Results/Parallel_results.csv")
 
-#colnames <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
-colnames <- c("S1","S2","S3","S4","S5","S6")
-colnames <- c("P1","P2","P3","P4","P5","P6")
+# Single-chain with noise, comment in 
+# results <- read.csv("./Results/Single_results_noise/merged_results.csv")
+
+# Parallel-chain without noise, comment in
+results <- read.csv("./Results/Parallel_results_noise.csv")
+
+colnames <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 rownames <- c("Pow","F1","F2","F3","F4","Count_P","Count_FP","FDR","Correlation_P","Correlation_FP","MAE","Time","Correlation_P_Med","Correlation_P_Max","Correlation_P_Min","Correlation_FP_Med","Correlation_FP_Max","Correlation_FP_Min","MAE_Med","MAE_Max","MAE_Min")
 Metrics <- data.frame(matrix(ncol = length(colnames), nrow = length(rownames)))
 colnames(Metrics) <- colnames

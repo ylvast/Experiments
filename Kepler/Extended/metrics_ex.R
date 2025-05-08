@@ -1,34 +1,27 @@
-
-results <- read.csv("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/Extended/2025-02-26_16_32_parallel_fixed/merged_results.csv")
-feature_results <- read.csv("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/Extended/2025-02-26_16_32_parallel_fixed/merged_features.csv")
-source("/uio/hume/student-u69/ylvasto/privat/Experiments/Kepler/helpers.R")
+# Script to get metrics from the extended experiments
+source("../helpers.R")
 library(FBMS)
-results
-summary(results)
-dim(results)
 
+# Single results without noise, comment in
+# results <- read.csv("./Results/Single_results/merged_results.csv")
+# feature_results <- read.csv("./Results/Single_results/merged_features.csv")
+# colnames <- c("S1","S2","S3","S4","S5","S6")
 
-s1 <- feature_results[feature_results$Experiment=="S1",]
-s2 <- feature_results[feature_results$Experiment=="S2",]
-s3 <- feature_results[feature_results$Experiment=="S3",]
-s4 <- feature_results[feature_results$Experiment=="S4",]
-s5 <- feature_results[feature_results$Experiment=="S5",]
-s6 <- feature_results[feature_results$Experiment=="S6",]
-list_of_s1 <- max_prob_tp(10,s1)
-list_of_s2 <- max_prob_tp(10,s2)
-list_of_s1
-list_of_s2
-list_of_s3 <- max_prob_tp(10,s3)
-list_of_s4 <- max_prob_tp(10,s4)
-list_of_s3
-list_of_s4
-list_of_s5 <- max_prob_tp(10,s5)
-list_of_s6 <- max_prob_tp(10,s6)
-list_of_s5
-list_of_s6
+# Parallel results without noise, comment in
+# results <- read.csv("./Results/Parallel_results/merged_results.csv")
+# feature_results <- read.csv("./Results/Parallel_results/merged_features.csv")
+# colnames <- c("P1","P2","P3","P4","P5","P6")
 
-colnames <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
+# Single results without noise, comment in
+# results <- read.csv("./Results/Single_results_noise/merged_results.csv")
+# feature_results <- read.csv("./Results/Single_results_noise/merged_features.csv")
+# colnames <- c("S1","S2","S3","S4","S5","S6")
+
+# Parallel results with noise, comment in
+results <- read.csv("./Results/Parallel_results_noise/merged_results.csv")
+feature_results <- read.csv("./Results/Parallel_results_noise/merged_features.csv")
 colnames <- c("P1","P2","P3","P4","P5","P6")
+
 rownames <- c("Pow","F1","F2","F3","F4","Count_P","Count_FP","FDR","Correlation_P","Correlation_FP","MAE","Time","Correlation_P_Med",
               "Correlation_P_Max","Correlation_P_Min","Correlation_FP_Med","Correlation_FP_Max","Correlation_FP_Min","MAE_Med","MAE_Max",
               "MAE_Min", "R_Med", "R_Min", "R_Max", "LMP_Med", "LMP_Min", "LMP_Max", "pos_Med","pos_Min","pos_Max")
@@ -73,9 +66,5 @@ for (experiment in colnames) {
   Metrics["Time",experiment] <- mean(as.numeric(exp_df$Time))
 }
 
-features_df <- feature_results[feature_results$Experiment=="S1",]
-max_prob_tp(10,features_df)
 Metrics
-list_of_margs
 
-dim(results)

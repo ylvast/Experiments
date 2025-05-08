@@ -1,8 +1,12 @@
-# Abalone
+# Calculates the reported metrics for the Abalone dataset
 
-date <- "2025-02-18_13_40"
-results <- read.csv(paste("/uio/hume/student-u69/ylvasto/privat/Experiments/Abalone/","results_",date,".csv", sep=""))
-results <- read.csv("/uio/hume/student-u69/ylvasto/privat/Experiments/Abalone/ 2025-02-21_12_06/merged_results.csv")
+# Comment in wanted results
+
+# Parallel results
+results <- read.csv("./Results/Parallel_results.csv")
+
+# Single results
+results <- read.csv("./Results/Single_results/merged_results.csv")
 
 colnames <- c("S1","S2","S3","S4","S5","S6","P1","P2","P3","P4","P5","P6")
 rownames <- c("Correlation","MAE","RMSE","Corr_Med","Corr_Min","Corr_Max","MAE_Med","MAE_Min","MAE_Max","RMSE_Med","RMSE_Min","RMSE_Max","Time")

@@ -1,10 +1,19 @@
-setwd("/uio/hume/student-u69/ylvasto/privat/Experiments")
+# Script to run PMLBR experiments
+
 library(pmlbr)
-source("./PMLBR/config_pmlbr.R")
+source("./config_pmlbr.R")
 library(devtools)
 install_github("ylvast/GMJMCMC@FBMSY")
 library(FBMS)
 results = list()
+
+# Change to 2 if second experiment is run
+ex <- 1
+
+# Min max normalization
+min_max_scale <- function(x) {
+  (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+}
 
 # Config file
 transforms <- experiment_config$transforms
@@ -14,54 +23,9 @@ nfinal <- experiment_config$N_final
 
 # Folder for results
 now <-format(Sys.time(), "%Y-%m-%d_%H_%M")
-dir_path = file.path("./PMLBR",now)
+dir_path = now
 dir.create(dir_path)
 experiment_names <- c("S1","S2")
-
-# g prior
-gaussian.loglik.g <- function (y, x, model, complex, params)
-  
-{
-  
-  
-  
-  suppressWarnings({
-    
-    mod <- fastglm(as.matrix(x[, model]), y, family = gaussian())
-    
-  })
-  
-  
-  
-  # Calculate R-squared
-  
-  y_mean <- mean(y)
-  
-  TSS <- sum((y - y_mean)^2)
-  
-  RSS <- sum(mod$residuals^2)
-  
-  Rsquare <- 1 - (RSS / TSS)
-  
-  
-  
-  # logarithm of marginal likelihood
-  
-  mloglik <- 0.5*(log(1.0 + params$g) * (dim(x)[1] - mod$rank)  - log(1.0 + params$g * (1.0 - Rsquare)) * (dim(x)[1]  - 1))*(mod$rank!=1)
-  
-  
-  
-  # logarithm of model prior
-  
-  if (length(params$r) == 0)  params$r <- 1/dim(x)[1]  # default value or parameter r
-  
-  lp <- log_prior(params, complex)
-  
-  
-  
-  return(list(crit = mloglik + lp, coefs = mod$coefficients))
-  
-}
 
 # Function to run experiments
 experiment_func <- function(data,data_name,P,ninit,nfinal,probs,transforms,run){
@@ -87,25 +51,8 @@ experiment_func <- function(data,data_name,P,ninit,nfinal,probs,transforms,run){
   params$loglik$var = "unknown"
   
   # Correct transformation probabilities
-  if (run <= experiment_config$count){
-    ex <- 1
-    prior <- gaussian.loglik
-    to_file <- "gaussian.loglik"
-  } else if (run > experiment_config$count & run <= 2 * experiment_config$count){
-    ex <- 1
-    prior <- gaussian.loglik.g
-    params$loglik$g <- max((dim(train)[2]-1)^2,dim(train)[1])
-    to_file <- "gaussian.loglik.g"
-  } else if (run > 2*experiment_config$count & run <= 3 * experiment_config$count){
-    ex <- 2
-    prior <- gaussian.loglik
-    to_file <- "gaussian.loglik"
-  } else {
-    ex <- 2
-    prior <- gaussian.loglik.g
-    to_file <- "gaussian.loglik.g"
-    params$loglik$g <- max((dim(train)[2]-1)^2,dim(train)[1])
-  }
+  prior <- gaussian.loglik
+  to_file <- "gaussian.loglik"
   probs$gen <- experiment_config$probs[[ex]]
   
   try ({
@@ -134,7 +81,7 @@ experiment_func <- function(data,data_name,P,ninit,nfinal,probs,transforms,run){
   marg3 <- if (length(features) > 2) margs[3] else "NA"
   
   # MAE 
-  preds <- predict(model,test[,-14])$aggr$mean
+  preds <- predict(model,test)$aggr$mean
   mae <- mean(abs(preds-test$target))
   
   # R^2
@@ -195,7 +142,7 @@ experiment_func <- function(data,data_name,P,ninit,nfinal,probs,transforms,run){
   features_comp <- summary_comp$feats.strings
   margs <- summary_comp$marg.probs
   run_data <- data.frame(Experiment = rep(experiment_names[ex],length(features_comp)), Run = rep(actual_run, length(features_comp)), Number = paste0("Feature", 1:length(features_comp)), 
-                         Feature = features_comp, Margs = margs)
+                         Feature = features_comp, Margs = margs, Data = rep(data_name, length(features_comp)))
   
   # If the CSV file already exists, append new rows (avoid overwriting)
   if (file.exists(Results_features)) {
@@ -205,24 +152,23 @@ experiment_func <- function(data,data_name,P,ninit,nfinal,probs,transforms,run){
   }
   })
 }
-already_checked <- read.csv("./PMLBR/2025-03-10_17_16_11_first/8/results.csv")$Data
-datasets <- setdiff(pmlbr::regression_datasets(), already_checked)
-already_checked <- read.csv("./PMLBR/2025-03-11_09_12_second/8/results.csv")$Data
-datasets <- setdiff(datasets, already_checked)
+
+datasets <- pmlbr::regression_datasets()
+
 for(data_name in datasets)
   
 {
   
-  data =  pmlbr::fetch_data(data_name)
-  data$target <- (data$target - min(data$target)) / (max(data$target) - min(data$target))
+  data <-  pmlbr::fetch_data(data_name)
+  data <- as.data.frame(lapply(data, min_max_scale))
   
-  if(dim(data)[1]>20000)
+  if(dim(data)[1]>15000)
     
     next
     
   # Initialize probs
   probs <- gen.probs.gmjmcmc(transforms)
     
-  mclapply(seq_len(experiment_config$count*4), function (i) experiment_func(data,data_name,P,ninit,nfinal,probs,transforms,i), mc.cores=experiment_config$count*4)
+  mclapply(seq_len(experiment_config$count), function (i) experiment_func(data,data_name,P,ninit,nfinal,probs,transforms,i), mc.cores=experiment_config$count)
   
 }
